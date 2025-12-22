@@ -5,7 +5,7 @@ public class Trainer {
     private int trainerId;
     private String name;
     private String specialization;
-    private int experienceYears; // убрали static
+    private int experienceYears;
 
 
     public Trainer(int trainerId, String name, String specialization, int experienceYears) {
