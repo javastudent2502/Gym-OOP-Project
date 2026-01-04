@@ -1,86 +1,52 @@
 package com.meiirdana.gym;
 
 public class Members {
-
-    private int memberId;
-    private String name;
-    private int age;
-    private String membershipType;
+    protected int memberId;
+    protected String name;
+    protected int age;
+    protected String membershipType;
 
     public Members(int memberId, String name, int age, String membershipType) {
         this.memberId = memberId;
-        setName(name);
-        setAge(age);
+        this.name = name;
+        this.age = age;
         this.membershipType = membershipType;
     }
 
-    public Members() {
-        this.memberId = 0;
-        this.name = "Unknown";
-        this.age = 0;
-        this.membershipType = "Basic";
-    }
-    public int getMemberId() {
-        return memberId;
-    }
 
-    public String getName() {
-        return name;
-    }
+    public int getMemberId() { return memberId; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getMembershipType() { return membershipType; }
 
-    public int getAge() {
-        return age;
-    }
 
-    public String getMembershipType() {
-        return membershipType;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
-    }
-
+    public void setMemberId(int memberId) { this.memberId = memberId; }
     public void setName(String name) {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        } else {
-            this.name = "Unknown";
-        }
+        if(name != null && !name.trim().isEmpty()) this.name = name;
     }
-
     public void setAge(int age) {
-        if (age >= 0) {
-            this.age = age;
-        } else {
-            this.age = 0;
-        }
+        if(age >= 0) this.age = age;
+    }
+    public void setMembershipType(String membershipType) {this.membershipType = membershipType;}
+
+
+    public void workOut() {
+        System.out.println(name + " is working out.");
     }
 
-    public void setMembershipType(String membershipType) {
-        this.membershipType = membershipType;
+    public String getRole() {
+        return "Member";
     }
-
-    public boolean isAdult() {
-        return age >= 18;
-    }
-
 
     public boolean isActive() {
-        return !membershipType.equals("Expired");
-    }
-
-    public void upgradeMembership() {
-        this.membershipType = "Premium";
+        return !membershipType.equalsIgnoreCase("Expired");
     }
 
     @Override
     public String toString() {
-        return "Members{" +
-                "memberId=" + memberId +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", membershipType='" + membershipType + '\'' +
-                '}';
+        return "[" + getRole() + "] " + name +
+                " (ID: " + memberId + ", Age: " + age +
+                ", Type: " + membershipType + ")";
     }
 }
 
