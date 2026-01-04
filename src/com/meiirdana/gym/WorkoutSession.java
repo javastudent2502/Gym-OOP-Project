@@ -9,9 +9,9 @@ public class WorkoutSession {
 
     public WorkoutSession(int sessionId, String memberName, String trainerName, int duration) {
         this.sessionId = sessionId;
-        this.memberName = memberName;
-        this.trainerName = trainerName;
-        this.duration = duration;
+        setMemberName(memberName);
+        setTrainerName(trainerName);
+        setDuration(duration);
     }
 
     public WorkoutSession() {
@@ -25,36 +25,50 @@ public class WorkoutSession {
         return sessionId;
     }
 
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
-    }
-
     public String getMemberName() {
         return memberName;
-    }
-
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
     }
 
     public String getTrainerName() {
         return trainerName;
     }
 
-    public void setTrainerName(String trainerName) {
-        this.trainerName = trainerName;
-    }
-
     public int getDuration() {
         return duration;
     }
 
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public void setMemberName(String memberName) {
+        if (memberName != null && !memberName.trim().isEmpty()) {
+            this.memberName = memberName;
+        } else {
+            this.memberName = "Unknown";
+        }
+    }
+
+    public void setTrainerName(String trainerName) {
+        if (trainerName != null && !trainerName.trim().isEmpty()) {
+            this.trainerName = trainerName;
+        } else {
+            this.trainerName = "Unknown";
+        }
+    }
+
     public void setDuration(int duration) {
-        this.duration = duration;
+        if (duration > 0) {
+            this.duration = duration;
+        } else {
+            this.duration = 0;
+        }
     }
 
     public void extendSession(int extraMinutes) {
-        duration += extraMinutes;
+        if (extraMinutes > 0) {
+            duration += extraMinutes;
+        }
     }
 
     public boolean isLongSession() {

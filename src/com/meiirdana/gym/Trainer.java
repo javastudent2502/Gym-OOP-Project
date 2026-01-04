@@ -10,9 +10,9 @@ public class Trainer {
 
     public Trainer(int trainerId, String name, String specialization, int experienceYears) {
         this.trainerId = trainerId;
-        this.name = name;
+        setName(name);
         this.specialization = specialization;
-        this.experienceYears = experienceYears;
+        setExperienceYears(experienceYears);
     }
 
 
@@ -28,32 +28,41 @@ public class Trainer {
         return trainerId;
     }
 
-    public void setTrainerId(int trainerId) {
-        this.trainerId = trainerId;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getSpecialization() {
         return specialization;
     }
 
-    public void setSpecialization(String specialization) {
-        this.specialization = specialization;
-    }
-
     public int getExperienceYears() {
         return experienceYears;
     }
 
+    public void setTrainerId(int trainerId) {
+        this.trainerId = trainerId;
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            this.name = name;
+        } else {
+            this.name = "Unknown";
+        }
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
+    }
+
+
     public void setExperienceYears(int experienceYears) {
-        this.experienceYears = experienceYears;
+        if  (experienceYears >= 0) {
+            this.experienceYears = experienceYears;
+        } else {
+            this.experienceYears = 0;
+        }
     }
 
 

@@ -9,8 +9,8 @@ public class Members {
 
     public Members(int memberId, String name, int age, String membershipType) {
         this.memberId = memberId;
-        this.name = name;
-        this.age = age;
+        setName(name);
+        setAge(age);
         this.membershipType = membershipType;
     }
 
@@ -20,38 +20,50 @@ public class Members {
         this.age = 0;
         this.membershipType = "Basic";
     }
-
     public int getMemberId() {
         return memberId;
-    }
-
-    public void setMemberId(int memberId) {
-        this.memberId = memberId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getAge() {
         return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public String getMembershipType() {
         return membershipType;
     }
 
+    public void setMemberId(int memberId) {
+        this.memberId = memberId;
+    }
+
+    public void setName(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            this.name = name;
+        } else {
+            this.name = "Unknown";
+        }
+    }
+
+    public void setAge(int age) {
+        if (age >= 0) {
+            this.age = age;
+        } else {
+            this.age = 0;
+        }
+    }
+
     public void setMembershipType(String membershipType) {
         this.membershipType = membershipType;
     }
+
+    public boolean isAdult() {
+        return age >= 18;
+    }
+
 
     public boolean isActive() {
         return !membershipType.equals("Expired");
