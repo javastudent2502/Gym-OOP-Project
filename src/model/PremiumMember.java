@@ -1,15 +1,17 @@
-package com.meiirdana.gym;
+package model;
 
 public class PremiumMember extends Members {
     private boolean personalTrainer;
 
     public PremiumMember(int memberId, String name, int age, String membershipType, boolean personalTrainer) {
         super(memberId, name, age, membershipType);
-        this.personalTrainer = personalTrainer;
+        setPersonalTrainer(personalTrainer);
     }
 
     public boolean hasPersonalTrainer() { return personalTrainer; }
-    public void setPersonalTrainer(boolean personalTrainer) { this.personalTrainer = personalTrainer; }
+    public void setPersonalTrainer(boolean personalTrainer) {
+        this.personalTrainer = personalTrainer;
+    }
 
     @Override
     public void workOut() {
@@ -26,6 +28,13 @@ public class PremiumMember extends Members {
             System.out.println(name + " has booked a personal trainer.");
         else
             System.out.println(name + " has no personal trainer.");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Role: " + getRole());
+        System.out.println("Personal Trainer: " + (personalTrainer ? "Yes" : "No"));
     }
 
     @Override

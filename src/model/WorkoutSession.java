@@ -1,4 +1,4 @@
-package com.meiirdana.gym;
+package model;
 
 public class WorkoutSession {
 
@@ -8,17 +8,10 @@ public class WorkoutSession {
     private int duration;
 
     public WorkoutSession(int sessionId, String memberName, String trainerName, int duration) {
-        this.sessionId = sessionId;
+        setSessionId(sessionId);
         setMemberName(memberName);
         setTrainerName(trainerName);
         setDuration(duration);
-    }
-
-    public WorkoutSession() {
-        this.sessionId = 0;
-        this.memberName = "Unknown";
-        this.trainerName = "Unknown";
-        this.duration = 0;
     }
 
     public int getSessionId() {
@@ -38,31 +31,31 @@ public class WorkoutSession {
     }
 
     public void setSessionId(int sessionId) {
+        if (sessionId <= 0) {
+            throw new IllegalArgumentException("Session ID must be positive");
+        }
         this.sessionId = sessionId;
     }
 
     public void setMemberName(String memberName) {
-        if (memberName != null && !memberName.trim().isEmpty()) {
-            this.memberName = memberName;
-        } else {
-            this.memberName = "Unknown";
+        if (memberName == null || memberName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
+        this.memberName = memberName;
     }
 
     public void setTrainerName(String trainerName) {
-        if (trainerName != null && !trainerName.trim().isEmpty()) {
-            this.trainerName = trainerName;
-        } else {
-            this.trainerName = "Unknown";
+        if (trainerName == null || trainerName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
+        this.trainerName = trainerName;
     }
 
     public void setDuration(int duration) {
-        if (duration > 0) {
-            this.duration = duration;
-        } else {
-            this.duration = 0;
+        if (duration < 0) {
+            throw new IllegalArgumentException("Duration cannot be negative");
         }
+        this.duration = duration;
     }
 
     public void extendSession(int extraMinutes) {

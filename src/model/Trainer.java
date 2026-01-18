@@ -1,6 +1,6 @@
-package com.meiirdana.gym;
+package model;
 
-public class Trainer {
+public class Trainer implements Trainable {
 
     private int trainerId;
     private String name;
@@ -9,20 +9,11 @@ public class Trainer {
 
 
     public Trainer(int trainerId, String name, String specialization, int experienceYears) {
-        this.trainerId = trainerId;
+        setTrainerId(trainerId);
         setName(name);
-        this.specialization = specialization;
+        setSpecialization(specialization);
         setExperienceYears(experienceYears);
     }
-
-
-    public Trainer() {
-        this.trainerId = 0;
-        this.name = "Unknown";
-        this.specialization = "General";
-        this.experienceYears = 0;
-    }
-
 
     public int getTrainerId() {
         return trainerId;
@@ -41,28 +32,32 @@ public class Trainer {
     }
 
     public void setTrainerId(int trainerId) {
+        if (trainerId <= 0) {
+            throw new IllegalArgumentException("Trainer ID must be positive");
+        }
         this.trainerId = trainerId;
     }
 
     public void setName(String name) {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        } else {
-            this.name = "Unknown";
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty");
         }
+        this.name = name;
     }
 
     public void setSpecialization(String specialization) {
+        if (specialization == null || specialization.trim().isEmpty()) {
+            throw new IllegalArgumentException("Specialization cannot be empty");
+        }
         this.specialization = specialization;
     }
 
 
     public void setExperienceYears(int experienceYears) {
-        if  (experienceYears >= 0) {
-            this.experienceYears = experienceYears;
-        } else {
-            this.experienceYears = 0;
+        if (experienceYears < 0) {
+            throw new IllegalArgumentException("Experience years cannot be negative");
         }
+        this.experienceYears = experienceYears;
     }
 
 
@@ -72,6 +67,13 @@ public class Trainer {
 
     public boolean canTeach(String type) {
         return specialization.equals(type);
+    }
+
+    @Override
+    public void train() {
+        System.out.println(name + " is training clients");
+        System.out.println("Specialization: " + specialization);
+        System.out.println("Experience years: " + experienceYears);
     }
 
     @Override
