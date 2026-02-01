@@ -21,7 +21,7 @@ public abstract class Members {
 
 
     public void setMemberId(int memberId) {
-        if (memberId <= 0) {
+        if (memberId < 0) {
             throw new IllegalArgumentException("Member ID must be positive");
         }
         this.memberId = memberId;

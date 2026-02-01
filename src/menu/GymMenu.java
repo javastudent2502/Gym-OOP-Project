@@ -1,47 +1,41 @@
 package menu;
 
+import database.*;
+import exception.InvalidInputException;
 import model.*;
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GymMenu implements MenuInterface {
-
-    private ArrayList<Members> allMembers;
-    private ArrayList<Trainer> trainersList;
-    private ArrayList<WorkoutSession> sessionsList;
-    private Scanner scanner;
+    private final MemberDAO memberDAO;
+    private final Scanner scanner ;
 
     public GymMenu() {
-        this.allMembers = new ArrayList<>();
-        this.trainersList = new ArrayList<>();
-        this.sessionsList = new ArrayList<>();
+        this.memberDAO = new MemberDAO();
         this.scanner = new Scanner(System.in);
-
-        try {
-            allMembers.add(new BasicMember(1, "Amina", 22, "Basic"));
-            allMembers.add(new StudentMember(2, "Maksat", 18, "Premium", "High School"));
-            allMembers.add(new PremiumMember(3, "Dana", 30, "Premium", true));
-
-            trainersList.add(new Trainer(101, "Saltanat", "Strength", 7));
-
-            sessionsList.add(new WorkoutSession(501, "Amina", "Saltanat", 60));
-            sessionsList.add(new WorkoutSession(502, "Maksat", "Saltanat", 45));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error initializing test data: " + e.getMessage());
-        }
     }
 
     @Override
     public void displayMenu() {
-        System.out.println("\n=== GYM MANAGEMENT SYSTEM ===");
-        System.out.println("1. Add Member");
-        System.out.println("2. Add Student Member");
-        System.out.println("3. Add Premium Member");
-        System.out.println("4. View All Members");
-        System.out.println("5. Demonstrate Workout (Polymorphism)");
-        System.out.println("6. View Student Members Only");
-        System.out.println("0. Exit");
+        System.out.println("\n╔════════════════════════════════════════╗");
+        System.out.println("║         MAIN MENU                     ║");
+        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("┌─ MEMBERS MANAGEMENT ─────────────────────┐");
+        System.out.println("|1. Add Member                             |");
+        System.out.println("|2. Add Student Member                     |");
+        System.out.println("|3. Add Premium Member                     |");
+        System.out.println("|4. View All Members                       |");
+        System.out.println("|5. View Student Members Only              |");
+        System.out.println("|6. Update Member                          |");
+        System.out.println("|7. Delete Member                          |");
+        System.out.println("├─ SEARCH & FILTER   ──────────────────────┤");
+        System.out.println("|8. Search by Min Age                      |");
+        System.out.println("|9. Search Member by Name                  |");
+        System.out.println("|10. Search by Age Range                   |");
+        System.out.println("├─ DEMO & OTHER   ─────────────────────────┤");
+        System.out.println("|11. Demonstrate Workout (Polymorphism)    |");
+        System.out.println("|0. Exit                                   |");
+        System.out.println("└────────────────────────────────────────--┘");
         System.out.print("Enter your choice: ");
     }
 
@@ -58,7 +52,7 @@ public class GymMenu implements MenuInterface {
 
                 switch (choice) {
                     case 1:
-                        addMember();
+                        addBasicMember();
                         break;
                     case 2:
                         addStudentMember();
@@ -70,10 +64,25 @@ public class GymMenu implements MenuInterface {
                         viewAllMembers();
                         break;
                     case 5:
-                        demonstratePolymorphism();
+                        viewStudentMembers();
                         break;
                     case 6:
-                        viewStudentMembers();
+                        updateMember();
+                        break;
+                    case 7:
+                        deleteMember();
+                        break;
+                    case 8:
+                        searchByMinAge();
+                        break;
+                    case 9:
+                        searchByName();
+                        break;
+                    case 10:
+                        searchByAgeRange();
+                        break;
+                    case 11:
+                        demonstratePolymorphism();
                         break;
                     case 0:
                         running = false;
@@ -81,7 +90,7 @@ public class GymMenu implements MenuInterface {
                         System.out.println("Goodbye!");
                         break;
                     default:
-                        System.out.println("Invalid choice! Please select 0-6.");
+                        System.out.println("Invalid choice! Please select 0-11.");
                 }
 
             } catch (java.util.InputMismatchException e) {
@@ -102,39 +111,30 @@ public class GymMenu implements MenuInterface {
     }
 
 
-    private void addMember() {
-        try {
-            System.out.print("Enter Member ID: ");
-            int id = scanner.nextInt();
+    private void addBasicMember() {
+        try{
+            System.out.println("Enter member name:");
+            String name= scanner.nextLine();
+
+            System.out.println("Enter members age:");
+            int age= scanner.nextInt();
             scanner.nextLine();
 
-            System.out.print("Enter Name: ");
-            String name = scanner.nextLine();
-
-            System.out.print("Enter Age: ");
-            int age = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.print("Enter Membership Type: ");
+            System.out.println("Enter membership type:");
             String type = scanner.nextLine();
 
-            Members member = new BasicMember(id, name, age, type);
-            allMembers.add(member);
-            System.out.println("Member added successfully!");
-        } catch (java.util.InputMismatchException e) {
-            System.out.println(" Error: Invalid input type!");
+            Members member = new BasicMember(0,name,age,type);
+            memberDAO.insertBasicMember((BasicMember) member);
+        }catch(java.util.InputMismatchException e){
+            System.out.println("Invalid input type");
             scanner.nextLine();
-        } catch (IllegalArgumentException e) {
-            System.out.println("Validation Error: " + e.getMessage());
+        }catch(IllegalArgumentException e){
+            System.out.println("Error:" + e.getMessage());
         }
     }
 
     private void addStudentMember() {
         try {
-            System.out.print("Enter Member ID: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-
             System.out.print("Enter Name: ");
             String name = scanner.nextLine();
 
@@ -148,8 +148,8 @@ public class GymMenu implements MenuInterface {
             System.out.print("Enter School Name: ");
             String school = scanner.nextLine();
 
-            StudentMember sm = new StudentMember(id, name, age, type, school);
-            allMembers.add(sm);
+            StudentMember sm = new StudentMember(0,name, age, type, school);
+            memberDAO.insertStudentMember(sm);
             System.out.println("Student Member added successfully!");
         }  catch (java.util.InputMismatchException e) {
             System.out.println(" Error: Invalid input type!");
@@ -161,10 +161,6 @@ public class GymMenu implements MenuInterface {
 
     private void addPremiumMember() {
         try {
-            System.out.print("Enter Member ID: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-
             System.out.print("Enter Name: ");
             String name = scanner.nextLine();
 
@@ -178,8 +174,8 @@ public class GymMenu implements MenuInterface {
             System.out.print("Has Personal Trainer? (true/false): ");
             boolean hasTrainer = scanner.nextBoolean(); scanner.nextLine();
 
-            PremiumMember pm = new PremiumMember(id, name, age, type, hasTrainer);
-            allMembers.add(pm);
+            PremiumMember pm = new PremiumMember(0, name, age, type, hasTrainer);
+            memberDAO.insertPremiumMember(pm);
             System.out.println("Premium Member added successfully!");
         } catch (java.util.InputMismatchException e) {
             System.out.println(" Error: Invalid input type!");
@@ -191,22 +187,17 @@ public class GymMenu implements MenuInterface {
 
 
     private void viewAllMembers() {
-        System.out.println("\n=== ALL MEMBERS ===");
-        if (allMembers.isEmpty()) {
-            System.out.println("No members found.");
-            return;
-        }
-        int count = 1;
-        for (Members m : allMembers) {
-            System.out.println(count + ". " + m);
-            count++;
-        }
+        memberDAO.displayAllMembers();
     }
+
 
     private void viewStudentMembers() {
         System.out.println("\n=== STUDENT MEMBERS ONLY ===");
+
+        List<Members>  members = memberDAO.getAllMembers();
+
         int count = 0;
-        for (Members m : allMembers) {
+        for (Members m : members) {
             if (m instanceof StudentMember sm) {
                 count++;
                 System.out.println(count + ". " + sm.getName() + " | School: " + sm.getSchoolName());
@@ -216,10 +207,112 @@ public class GymMenu implements MenuInterface {
             System.out.println("No student members found.");
     }
 
-    private void demonstratePolymorphism() {
-        System.out.println("\n=== POLYMORPHISM DEMO ===");
-        for (Members m : allMembers) {
-            m.workOut();
+
+    private void updateMember() {
+        System.out.print("Enter Member ID to update: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Members m = memberDAO.getMemberById(id);
+        if (m == null) {
+            System.out.println(" Member not found");
+            return;
+        }
+
+        System.out.println("Current info:");
+        System.out.println(m);
+
+        System.out.print("New name [" + m.getName() + "]: ");
+        String name = scanner.nextLine();
+        if (!name.isEmpty()) m.setName(name);
+
+        System.out.print("New age [" + m.getAge() + "]: ");
+        String ageStr = scanner.nextLine();
+        if (!ageStr.isEmpty()) m.setAge(Integer.parseInt(ageStr));
+
+        System.out.print("New membership type [" + m.getMembershipType() + "]: ");
+        String type = scanner.nextLine();
+        if (!type.isEmpty()) m.setMembershipType(type);
+
+
+        if (m instanceof StudentMember sm) {
+            System.out.print("New school [" + sm.getSchoolName() + "]: ");
+            String school = scanner.nextLine();
+            if (!school.isEmpty()) sm.setSchoolName(school);
+            memberDAO.updateStudentMember(sm);
+
+        } else if (m instanceof PremiumMember pm) {
+            System.out.print("Has personal trainer (" + pm.hasPersonalTrainer() + "): ");
+            String trainerInput = scanner.nextLine();
+            if (!trainerInput.isEmpty())
+                pm.setPersonalTrainer(Boolean.parseBoolean(trainerInput));
+
+            memberDAO.updatePremiumMember(pm);
+
+        } else if (m instanceof BasicMember bm) {
+            memberDAO.updateBasicMember(bm);
         }
     }
+
+
+    private void deleteMember() {
+        System.out.print("Enter Member ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Members m = memberDAO.getMemberById(id);
+        if (m == null) {
+            System.out.println("Member not found");
+            return;
+        }
+
+        System.out.println("Delete: " + m);
+        System.out.print("Are you sure? (yes/no): ");
+        String confirm = scanner.nextLine();
+
+        if (confirm.equalsIgnoreCase("yes")) {
+            memberDAO.deleteMember(id);
+            System.out.println(" Deleted");
+        } else {
+            System.out.println("Cancelled");
+        }
+    }
+    private void searchByName() {
+        System.out.print("Enter name to search: ");
+        String name = scanner.nextLine();
+
+        List<Members> results  = memberDAO.searchByName(name);
+
+        if (results.isEmpty()) {
+            System.out.println("No members found.");
+        } else {
+            results.forEach(System.out::println);
+        }
+    }
+
+    private void searchByAgeRange() {
+        System.out.print("Enter min age: ");
+        int min = scanner.nextInt();
+        System.out.print("Enter max age: ");
+        int max = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Members> results = memberDAO.searchByAgeRange(min, max);
+        results.forEach(System.out::println);
+    }
+
+    private void searchByMinAge() {
+        System.out.print("Enter minimum age: ");
+        int min = scanner.nextInt();
+        scanner.nextLine();
+
+        List<Members> results = memberDAO.searchByMinAge(min);
+        results.forEach(System.out::println);
+    }
+
+    private void demonstratePolymorphism() {
+        memberDAO.demonstratePolymorphism();
+    }
 }
+
+
